@@ -1,5 +1,5 @@
-import pandas as pd
 import numpy as np
+import torch
 
 def modality_div(data, mod):
     div_li = []
@@ -31,11 +31,16 @@ def tokenized_data(txt_data):
 def reg2cls(data):
     for i in range(len(data)):
         if data[i] >= 1.0:
-            data[i] = 1.0
+            data[i] = 2.0
         elif data[i] < 1.0 and data[i] > -1.0:
-            data[i] = 0.0
+            data[i] = 1.0
         else:
-            data[i] = -1.0
+            data[i] = 0.0
             
     return data
-            
+
+def accuracy(logits, labels):
+    _, predicted = torch.max(logits, 1)
+    correct = (predicted == labels).sum().item()
+    total = labels.size(0)
+    return correct / total
